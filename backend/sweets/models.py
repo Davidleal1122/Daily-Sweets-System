@@ -11,22 +11,20 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-class Order(models.Model):
-    PAYMENT_CHOICES = [
-        ('COD', 'Cash on Delivery'),
-        ('GCASH', 'GCash')
-    ]
+# sweets/models.py
+from django.db import models
 
+class Order(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    address = models.TextField()
-    contact_number = models.CharField(max_length=15)
+    street_address = models.CharField(max_length=255, default="Not Provided")  # ✅ Added default
+    contact_number = models.CharField(max_length=20)
     city = models.CharField(max_length=50)
     province = models.CharField(max_length=50)
     postal_code = models.CharField(max_length=10)
-    payment_method = models.CharField(max_length=5, choices=PAYMENT_CHOICES)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Order by {self.first_name} {self.last_name}"
+        return f"{self.first_name} {self.last_name}"
+

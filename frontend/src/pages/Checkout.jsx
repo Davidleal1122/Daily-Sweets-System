@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import CheckoutIcon from "../assets/CheckoutIcons/CheckoutIcon.svg";
@@ -19,7 +20,7 @@ const Checkout = () => {
     const navigate = useNavigate();
     const { cartItems, clearCart } = useCart();  
     const [showModal, setShowModal] = useState(false);
-    const [formError, setFormError] = useState(false);  // ✅ Added for error handling
+    const [formError, setFormError] = useState(false);  
 
     // Calculate total price
     const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -34,16 +35,38 @@ const Checkout = () => {
         const isFormComplete = Object.values(formData).every((value) => value.trim() !== "");
         if (isFormComplete) {
             setShowModal(true);
-            setFormError(false); // ✅ Clear error if form is complete
+            setFormError(false); 
         } else {
-            setFormError(true); // ✅ Show error if fields are empty
+            setFormError(true); 
         }
     };
 
-    const confirmOrder = () => {
-        clearCart();  // ✅ Clear the cart after confirming the order
-        setShowModal(false);
-        navigate('/order-confirmation');
+    // ✅ Send data to Django API and save order
+    const confirmOrder = async () => {
+        try {
+            const orderData = {
+                first_name: formData.firstName,
+                last_name: formData.lastName,
+                street_address: formData.streetAddress,
+                contact_number: formData.contactNumber,
+                city: formData.city,
+                province: formData.province,
+                postal_code: formData.postalCode,
+                payment_method: paymentMethod,
+                total_price: totalPrice
+            };
+
+            // Send data to Django REST API endpoint
+            await axios.post("http://localhost:8000/sweets/create-order/", orderData);
+
+            // Clear cart and redirect
+            clearCart();  
+            setShowModal(false);
+            navigate('/order-confirmation');
+        } catch (error) {
+            console.error("Error placing order:", error);
+            alert("There was an error placing your order. Please try again.");
+        }
     };
 
     const cancelOrder = () => {
