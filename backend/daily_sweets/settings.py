@@ -29,8 +29,8 @@ ALLOWED_HOSTS = []
 
 # CORS Settings
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5175",  # Corrected the port number
-    "http://127.0.0.1:5175",
+    "http://localhost:5174",  # Confirm this matches your frontend port
+    "http://127.0.0.1:5174",
 ]
 
 
@@ -52,15 +52,16 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",  # Must be at the top
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'daily_sweets.urls'
 

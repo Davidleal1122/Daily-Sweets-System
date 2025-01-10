@@ -14,7 +14,7 @@ const Products = () => {
     const [modalMessage, setModalMessage] = useState("");
 
     useEffect(() => {
-        axios.get('http://localhost:8000/sweets/products/')
+        axios.get('http://127.0.0.1:8000/sweets/products/')  // Use 127.0.0.1 instead of localhost
             .then(response => setProducts(response.data))
             .catch(error => console.error("Error fetching products:", error));
     }, []);
